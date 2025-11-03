@@ -23,7 +23,10 @@ public class PageController {
         return "auth/signup";
     }
 
-    /* ---------- 뉴스 (News) ---------- */
+/*
+    */
+/* ---------- 뉴스 (News) ---------- *//*
+
     @GetMapping("/news")
     public String newsList() {
         return "news/list";
@@ -33,6 +36,7 @@ public class PageController {
     public String newsDetail() {
         return "news/detail";
     }
+*/
 
 
     /* ---------- 관리자 (Admin) ---------- */
@@ -46,10 +50,10 @@ public class PageController {
         return "admin/dashboard";
     }
 
-    @GetMapping("/admin/users")
-    public String adminUsers() {
-        return "admin/users";
-    }
+//    @GetMapping("/admin/users")
+//    public String adminUsers() {
+//        return "admin/users";
+//    }
 
     @GetMapping("/admin/posts")
     public String adminPosts() {
@@ -62,5 +66,10 @@ public class PageController {
     @GetMapping("/admin/mails")
     public String adminMails() {
         return "admin/mails";
+    }
+
+    @GetMapping("/admin/mails-contents")
+    public String adminMailsContents() {
+      return "admin/mails-contents";
     }
 }
