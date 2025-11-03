@@ -30,17 +30,20 @@ public class Member {
   @Enumerated(EnumType.STRING)
   private Role role;          // 역할
 
+  private Boolean receiveEmail = true;  // 전체 뉴스레터 수신 동의
+  private String profileImage;          // 프로필 사진
+  
   @Column(name = "status", nullable = false)
   private Boolean isActive = true;
 
   private LocalDateTime createdAt;  // 생성일자
   private LocalDateTime updatedAt;  // 수정일자
 
-  // ✅ 연관관계 매핑 추가
+  // 연관관계 매핑 추가
   @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
   private List<UserSubscription> subscriptions;
 
-  // ✅ 구독 카테고리명 리스트 반환 (HTML에서 사용 가능)
+  // 구독 카테고리명 리스트 반환 (HTML에서 사용 가능)
   public List<String> getCategories() {
     if (subscriptions == null) return List.of();
     return subscriptions.stream()
@@ -54,6 +57,8 @@ public class Member {
     this.password = password;
     this.email = email;
     this.role = role;
+    this.receiveEmail = true;
+    this.profileImage = "/images/basic-profile.png";
     this.isActive = status;
     this.createdAt = LocalDateTime.now();
     this.updatedAt = LocalDateTime.now();
@@ -65,6 +70,7 @@ public class Member {
     this.isActive = status;
     this.updatedAt = LocalDateTime.now();
   }
+
 
   public enum Role {
     ROLE_USER,

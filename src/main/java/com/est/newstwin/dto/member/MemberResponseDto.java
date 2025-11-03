@@ -19,6 +19,8 @@ public class MemberResponseDto {
     private String memberName;
     private String email;
     private String role;
+    private String profileImage;
+    private Boolean receiveEmail;
     private Boolean isActive;
     private List<String> categories;
     private List<Long> categoryIds;
@@ -30,6 +32,8 @@ public class MemberResponseDto {
                 .memberName(member.getMemberName())
                 .email(member.getEmail())
                 .role(member.getRole().name())
+                .profileImage(member.getProfileImage())
+                .receiveEmail(member.getReceiveEmail())
                 .build();
     }
 
