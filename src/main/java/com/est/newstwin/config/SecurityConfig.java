@@ -51,7 +51,6 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/",                    // 홈
                                 "/news/**",             // 뉴스 관련 페이지
-                                "/post/**",             // 뉴스 상세 페이지
                                 "/feed",                // 뉴스 카테고리
                                 "/h2-console/**"        // H2 콘솔
                         ).permitAll()
@@ -61,7 +60,10 @@ public class SecurityConfig {
                                 "/api/auth/**",             // 로그인/로그아웃 API
                                 "/api/members/signup",      // 회원가입 API
                                 "/api/members/me",          // (개발용) 로그인 확인 API
-                                "/api/members/check-email"  // 이메일 중복 확인 API
+                                "/api/members/check-email",  // 이메일 중복 확인 API
+                                "/api/test/chatgpt/**",
+                                "/api/test/alan/**",
+                                "/api/test/**"
                         ).permitAll()
 
                         //좋아요/북마크 조회는 누구나 허용
@@ -101,9 +103,9 @@ public class SecurityConfig {
 
                 // 접근 거부 시 처리 (로그인된 사용자가 /login 접근 시 홈으로 리다이렉트)
                 .exceptionHandling(ex -> ex
-                    .accessDeniedHandler((request, response, accessDeniedException) -> {
-                        response.sendRedirect("/"); // 홈으로 이동
-                    })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.sendRedirect("/"); // 홈으로 이동
+                        })
                 );
 
         return http.build();
