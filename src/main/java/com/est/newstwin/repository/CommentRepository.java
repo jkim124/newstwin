@@ -24,5 +24,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
   @EntityGraph(attributePaths = {"member", "post"})
   Page<Comment> findAll(Pageable pageable);
+  
   void deleteAllByPostId(Long postId);
+
+  long countByPostId(Long postId);
 }
