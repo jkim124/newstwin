@@ -29,7 +29,7 @@ public class NewsletterScheduler {
   private final MailLogService mailService;
 
   @Transactional
-  @Scheduled(cron = "0 0 * * * *", zone = "Asia/Seoul")
+  /*@Scheduled(cron = "5 * * * * *", zone = "Asia/Seoul")*/
   public void sendNewsletters() {
     log.info("📧 [NewsletterScheduler] 구독자별 통합 뉴스 생성 및 발송 시작");
 
@@ -70,9 +70,11 @@ public class NewsletterScheduler {
       try {
         // ✅ 3️⃣ GPT 요약 생성
         String sourceText = buildSummaryText(allRecentNews);
-        String markdown = chatGPTService.analyzeMarkdown(sourceText);
-        String json = chatGPTService.analyzeJson(markdown);
-        String title = chatGPTService.generateTitle(markdown);
+        ChatGPTService.NewsletterResult result = chatGPTService.generateNewsletterSummary(sourceText);
+
+        String markdown = result.markdown();
+        String json = result.json();
+        String title = result.title();
 
         // ✅ 4️⃣ 메일용 HTML 생성
         String htmlContent = mailService.buildHtmlNewsletter(member, markdown, allRecentNews);
