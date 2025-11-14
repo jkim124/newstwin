@@ -113,6 +113,10 @@ public class PostService {
     Post post = postRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException("Post not found: " + id));
 
+    if (!"news".equals(post.getType())) {
+      throw new IllegalArgumentException("뉴스 게시글이 아닙니다.");
+    }
+
     post.increaseCount();
 
     Map<String,String> dict = termCacheService.dict();
@@ -163,12 +167,30 @@ public class PostService {
     Post post = postRepository.findById(postId)
         .orElseThrow(() -> new EntityNotFoundException("Post not found: " + postId));
 
+    List<Category> categories =
+        post.getCategory() != null ? List.of(post.getCategory()) : List.of();
+    return new PostResponseDto(post, categories);
+  }
+
+  @Transactional
+  public PostResponseDto getBoardDetail(Long postId) {
+    Post post = postRepository.findById(postId)
+        .orElseThrow(() -> new EntityNotFoundException("Post not found: " + postId));
+
+    if (!"community".equals(post.getType())) {
+      throw new IllegalArgumentException("커뮤니티 게시글이 아닙니다.");
+    }
+
     post.increaseCount();
 
     List<Category> categories =
         post.getCategory() != null ? List.of(post.getCategory()) : List.of();
     return new PostResponseDto(post, categories);
   }
+
+
+
+
 
   @Transactional
   public PostResponseDto togglePostStatus(Long postId) {

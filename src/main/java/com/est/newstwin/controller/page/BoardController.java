@@ -42,7 +42,7 @@ public class BoardController {
       @RequestParam(required = false) String search,
       Model model) {
 
-    Page<PostResponseDto> posts = postService.getBoardPosts("community", search, PageRequest.of(page, 10));
+    Page<PostResponseDto> posts = postService.getBoardPosts("community", search, PageRequest.of(page, 12));
     model.addAttribute("posts", posts);
     model.addAttribute("search", search);
     return "board/list";
@@ -55,7 +55,7 @@ public class BoardController {
       Model model,
       @AuthenticationPrincipal UserDetails userDetails) {
 
-    PostResponseDto post = postService.getAllPostDetail(id);
+    PostResponseDto post = postService.getBoardDetail(id);
     long likeCount = likeService.count(post.getId());
 
     Long memberId = null;
@@ -90,7 +90,7 @@ public class BoardController {
     model.addAttribute("username", username);
 
     if (id != null) { // 수정 폼
-      PostResponseDto post = postService.getAllPostDetail(id);
+      PostResponseDto post = postService.getBoardDetail(id);
       model.addAttribute("post", post);
       model.addAttribute("isEdit", true);
     } else { // 새 글 폼
