@@ -10,60 +10,7 @@
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
   <link rel="stylesheet" th:href="@{/css/layout/header.css}">
-
-  <style>
-    body { background-color:#f8f9fa; }
-    .content-wrap {
-      max-width: 720px;
-      margin: auto;
-      background: white;
-      border-radius: .5rem;
-      padding: 1.25rem;
-      box-shadow: 0 0.2rem 1rem rgba(0,0,0,.05);
-    }
-    .post-title { font-weight:700; font-size:1.6rem; line-height:1.4; }
-    .post-meta { color:#6c757d; font-size:.9rem; }
-    .post-image img { width:100%; border-radius:.5rem; margin:1rem 0; }
-
-    .post-body { font-size:1rem; color:#333; line-height:1.7; }
-    .post-body h1, .post-body h2, .post-body h3 {
-      margin-top: 1.4rem; font-weight:700;
-    }
-    .post-body p, .post-body li {
-      line-height:1.7; margin-bottom:0.75rem;
-    }
-    .post-body code {
-      background:#f8f9fa; padding:0.2rem 0.4rem;
-      border-radius:4px; font-family:monospace;
-    }
-    .post-body pre {
-      background:#f8f9fa; padding:1rem;
-      border-radius:8px; overflow-x:auto;
-    }
-    .post-body a {
-      color:#0d6efd; text-decoration:none;
-    }
-    .post-body a:hover {
-      text-decoration:underline;
-    }
-
-    /* 용어 강조 */
-    .nt-term {
-      background: linear-gradient(to top, rgba(255, 235, 59, 0.4) 45%, transparent 45%);
-      color: #212529; font-weight: 500; cursor: help;
-      position: relative; border-radius: 2px; transition: background 0.2s ease, color 0.2s ease;
-      padding: 0 2px;
-    }
-    .nt-term:hover {
-      background: linear-gradient(to top, rgba(255, 235, 59, 0.7) 45%, transparent 45%);
-      color: #000;
-    }
-
-    .reaction-bar { display:flex; align-items:center; gap:1.2rem; margin-top:1.5rem; }
-    .reaction-bar button { background:none; border:none; color:#6c757d; cursor:pointer; display:flex; align-items:center; gap:0.4rem; }
-    .reaction-bar button:hover { color:#dc3545; }
-    .comment-section { margin-top:2rem; }
-  </style>
+  <link rel="stylesheet" th:href="@{/css/board/boardpostdetail.css}">
 </head>
 
 <body>
@@ -73,8 +20,14 @@
 <div class="container-fluid">
   <div class="row">
     <!-- 본문 -->
-    <main class="col-12 col-md-8 col-lg-7 py-4">
+    <main class="py-4">
       <div class="content-wrap">
+        <!-- 뒤로가기 -->
+        <button class="btn btn-secondary btn-sm mb-3 d-inline-flex align-items-center gap-1"
+                 onclick="goBack()">
+        <i class="bi bi-arrow-left"></i>목록으로
+        </button>
+
         <!-- 제목 -->
         <h1 class="post-title" id="markdownTitle">
           <span th:text="${post.title}"></span>
@@ -88,8 +41,8 @@
         </div>
 
         <!-- 썸네일 -->
-        <div class="post-image" th:if="${post.thumbnailUrl != null}">
-          <img th:src="${post.thumbnailUrl}" alt="thumbnail">
+        <div class="post-image" th:if="${post.thumbnailUrl}">
+          <img th:src="@{${post.thumbnailUrl}}" alt="thumbnail">
         </div>
 
         <!-- 본문 -->
@@ -97,38 +50,43 @@
           <span th:text="${post.content}"></span>
         </div>
 
-        <!-- 반응 버튼 -->
-        <div class="reaction-bar">
-          <button id="likeBtn"
-                  class="btn btn-light border-0 d-flex align-items-center gap-1"
-                  th:data-post-id="${post.id}"
-                  th:data-liked="${liked}">
-            <span id="heartIcon" th:text="${liked} ? '❤️' : '🤍'"></span>
-            <span id="likeCount" th:text="${likeCount}">0</span>
-            <span>좋아요</span>
-          </button>
+        <div class="reaction-bar d-flex justify-content-between align-items-center mt-3">
 
-          <button id="shareBtn"
-                  class="btn btn-light border-0 d-flex align-items-center gap-1">
-            <i class="bi bi-share"></i>
-            <span>공유하기</span>
-          </button>
-
-          <div id="shareMenu" class="card position-absolute d-none" style="z-index:1000; width:160px;">
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item share-copy">🔗 URL 복사</li>
-              <li class="list-group-item share-sns">📢 SNS 공유</li>
-            </ul>
-          </div>
-          <div class="d-flex justify-content-end mt-3" th:if="${isAuthor}">
-            <a class="btn btn-outline-secondary btn-sm me-2"
-               th:href="@{'/board/edit/' + ${post.id}}">수정하기
-            </a>
-            <button th:if="${isAuthor}"
-                    id="deleteBtn"
-                    class="btn btn-danger btn-sm"
-                    th:data-post-id="${post.id}"> 삭제
+          <!--반응버튼-->
+          <div class="d-flex align-items-center gap-2">
+            <button id="likeBtn"
+                    class="btn btn-light border-0 d-flex align-items-center gap-1"
+                    th:data-post-id="${post.id}"
+                    th:data-liked="${liked}">
+              <span id="heartIcon" th:text="${liked} ? '❤️' : '🤍'"></span>
+              <span id="likeCount" th:text="${likeCount}">0</span>
+              <span>좋아요</span>
             </button>
+
+            <button id="shareBtn"
+                    class="btn btn-light border-0 d-flex align-items-center gap-1">
+              <i class="bi bi-share"></i>
+              <span>공유하기</span>
+            </button>
+
+            <div id="shareMenu"
+                 class="card position-absolute d-none"
+                 style="z-index:1000; width:160px;">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item share-copy">🔗 URL 복사</li>
+                <li class="list-group-item share-sns">📢 SNS 공유</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 오른쪽: 수정/삭제 버튼 -->
+          <div class="d-flex align-items-center gap-2" th:if="${isAuthor}">
+            <a class="btn btn-plain btn-sm btn-edit"
+               th:href="@{'/board/edit/' + ${post.id}}">수정</a>
+
+            <a id="deleteBtn"
+                    class="btn btn-plain btn-sm btn-delete"
+                    th:data-post-id="${post.id}">삭제</a>
           </div>
         </div>
 
@@ -169,6 +127,18 @@
   const MEMBER_RECEIVE_EMAIL = [[${memberReceiveEmail}]];
   const LOGIN_PROFILE_URL = /*[[${loginUser != null ? loginUser.profileImage : null}]]*/ null;
   const DEFAULT_PROFILE_URL = '/images/basic-profile.png';
+  function goBack() {
+    const ref = document.referrer;
+    if (!ref) {
+      window.location.href = "/board";
+      return;
+    }
+    if (ref.includes("/board/write") || ref.includes("/board/edit")) {
+      window.location.href = "/board";
+      return;
+    }
+    history.back();
+  }
 </script>
 
 <!-- 필수 JS -->

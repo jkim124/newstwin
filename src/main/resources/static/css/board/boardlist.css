@@ -21,6 +21,24 @@ main {
     margin: 0 auto;         /* 중앙 정렬 */
 }
 
+
+#cardView .card {
+  border: 1px solid #ebebeb;
+  border-radius: 12px;
+  transition: all .25s ease;
+  background: #fff;
+}
+
+#cardView .card:hover {
+  transform: translateY(-3px);
+  border-color: #6dc6ff;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+}
+
+
+
+
+
 /* 헤더 */
 .list-header {
     border-bottom: 1px solid #e5e5e5;

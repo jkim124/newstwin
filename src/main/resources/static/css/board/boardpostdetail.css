@@ -13,14 +13,36 @@ main {
 }
 
 .content-wrap {
-    width: 80vw;
-    background: #fff;
-    border-radius: 0.75rem;
-    padding: 3rem 4rem;
-    box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.05);
-    margin: auto;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 3rem;
+  background: #fff;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.05);
 }
 
+/* 기본 미니멀 버튼 */
+.btn-plain {
+  background: none;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  color: #212529 ;            /* 기본 텍스트 = 검정 */
+  padding: 4px 10px;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+/* 수정 hover = 하늘색 */
+.btn-edit:hover {
+  color: #6dc6ff ;            /* 텍스트 하늘색 */
+}
+
+/* 삭제 hover = 빨간색 */
+.btn-delete:hover {
+  color: #dc3545 ;
+}
 
 /* ======================
    타이틀 / 메타정보
