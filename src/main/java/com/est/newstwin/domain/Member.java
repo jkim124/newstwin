@@ -22,6 +22,8 @@ public class Member {
 
   private String memberName;
   private String password;
+
+  @Column(nullable = false, unique = true)
   private String email;
 
   @Enumerated(EnumType.STRING)
@@ -31,9 +33,9 @@ public class Member {
   private String profileImage;
 
   @Column(name = "status", nullable = false)
-  private Boolean isActive = true;   // 관리자 차단 여부
+  private Boolean isActive = true;
 
-  private Boolean isVerified = false; // 이메일 인증 여부 추가
+  private Boolean isVerified = false;
 
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
@@ -57,7 +59,7 @@ public class Member {
     this.receiveEmail = true;
     this.profileImage = "/images/basic-profile.png";
     this.isActive = status;
-    this.isVerified = false; // 이메일 인증 전 false
+    this.isVerified = false;
     this.createdAt = LocalDateTime.now();
     this.updatedAt = LocalDateTime.now();
   }

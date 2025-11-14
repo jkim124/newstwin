@@ -4,6 +4,7 @@
 
   if (!shareBtn || !shareMenu) return;
 
+  // 메뉴 열기/닫기
   shareBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     const rect = shareBtn.getBoundingClientRect();
@@ -23,7 +24,7 @@
   });
 
   // URL 복사
-  document.querySelector('.share-copy').addEventListener('click', async () => {
+  document.querySelector('#shareMenu .share-copy').addEventListener('click', async () => {
     const url = window.location.href;
     try {
       await navigator.clipboard.writeText(url);
@@ -35,7 +36,7 @@
   });
 
   // SNS 공유
-  document.querySelector('.share-sns').addEventListener('click', async () => {
+  document.querySelector('#shareMenu .share-sns').addEventListener('click', async () => {
     const url = window.location.href;
     const title = document.title;
 
