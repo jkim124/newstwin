@@ -110,6 +110,10 @@ document.addEventListener("DOMContentLoaded", () => {
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
+        const submitBtn = form.querySelector("button[type='submit']");
+        submitBtn.disabled = true;
+        submitBtn.textContent = "처리 중...";
+
         const email = emailInput.value.trim();
         const password = passwordInput.value.trim();
         const confirmPassword = confirmInput.value.trim();
@@ -117,21 +121,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!isEmailAvailable) {
             alert("이메일 중복 확인을 먼저 해주세요.");
+            submitBtn.disabled = false;
+            submitBtn.textContent = "회원가입";
             return;
         }
 
         if (!validatePassword(password)) {
             alert("비밀번호 형식이 올바르지 않습니다.");
+            submitBtn.disabled = false;
+            submitBtn.textContent = "회원가입";
             return;
         }
 
         if (password !== confirmPassword) {
             alert("비밀번호가 일치하지 않습니다.");
+            submitBtn.disabled = false;
+            submitBtn.textContent = "회원가입";
             return;
         }
 
         if (memberName.length < 2) {
             alert("닉네임은 2자 이상 입력해주세요.");
+            submitBtn.disabled = false;
+            submitBtn.textContent = "회원가입";
             return;
         }
 
@@ -149,10 +161,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 window.location.href = "/verify-info";
             } else {
                 alert(data.message || "회원가입에 실패했습니다.");
+
+                submitBtn.disabled = false;
+                submitBtn.textContent = "회원가입";
             }
         } catch (err) {
             console.error("회원가입 요청 오류:", err);
             alert("서버와 통신 중 문제가 발생했습니다.");
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = "회원가입";
         }
     });
 

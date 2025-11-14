@@ -9,6 +9,7 @@ import com.est.newstwin.repository.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -23,10 +25,11 @@ public class MemberService {
     private final CategoryRepository categoryRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailVerificationTokenRepository tokenRepository;
-    private final EmailService emailService;
+    private final EmailAsyncService emailAsyncService; // ← 새로 주입
 
     public MemberResponseDto signup(MemberRequestDto requestDto) {
-        if (memberRepository.findByEmail(requestDto.getEmail()).isPresent()) {
+
+        if (memberRepository.existsByEmail(requestDto.getEmail())) {
             throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
         }
 
@@ -37,15 +40,18 @@ public class MemberService {
                 encodedPassword,
                 requestDto.getEmail(),
                 Member.Role.ROLE_USER,
-                true // isActive 기본 true (관리자 차단 아님)
+                true
         );
-        member.setIsVerified(false); // 이메일 인증 전 false
 
         Member savedMember = memberRepository.save(member);
 
         EmailVerificationToken token = EmailVerificationToken.create(savedMember);
         tokenRepository.save(token);
-        emailService.sendVerificationEmail(savedMember.getEmail(), token.getToken());
+
+        // 여기서 완전히 비동기 실행됨
+        emailAsyncService.sendVerificationEmail(savedMember.getEmail(), token.getToken());
+
+        log.info("회원가입 요청 처리 완료 — 즉시 응답 반환");
 
         return MemberResponseDto.fromEntity(savedMember);
     }
@@ -63,6 +69,7 @@ public class MemberService {
         memberRepository.save(member);
 
         tokenRepository.delete(token);
+
         return "이메일 인증이 완료되었습니다. 로그인해주세요.";
     }
 
@@ -71,7 +78,7 @@ public class MemberService {
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         if (member.getIsVerified()) {
-            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE); // 이미 인증됨
+            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
         }
 
         tokenRepository.findAll().stream()
@@ -80,7 +87,9 @@ public class MemberService {
 
         EmailVerificationToken newToken = EmailVerificationToken.create(member);
         tokenRepository.save(newToken);
-        emailService.sendVerificationEmail(member.getEmail(), newToken.getToken());
+
+        // 역시 비동기
+        emailAsyncService.sendVerificationEmail(member.getEmail(), newToken.getToken());
     }
 
     @Transactional(readOnly = true)
