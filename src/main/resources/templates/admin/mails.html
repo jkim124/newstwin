@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>메일 로그 | NewsTwin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<th:block th:replace="~{layout/header_admin :: header}"></th:block>
+
+<main class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="fw-semibold">메일 발송 로그</h2>
+    <select id="mailTypeSelect" class="form-select w-auto"
+            onchange="filterBy('mailTypeSelect', 'status', '/admin/mails')">
+      <option value="">전체</option>
+      <option value="SUCCESS" th:selected="${selectedStatus == 'SUCCESS'}">성공</option>
+      <option value="FAIL" th:selected="${selectedStatus == 'FAIL'}">재전송</option>
+    </select>
+  </div>
+  <table class="table table-hover align-middle shadow-sm rounded-3 overflow-hidden">
+    <thead class="table-light">
+    <tr class="text-center">
+      <th style="width: 5%;">No</th>
+      <th style="width: 15%;">시간</th>
+      <th style="width: 10%;">이메일</th>
+      <th style="width: 30%;">제목</th>
+      <th style="width: 5%;">상태</th>
+    </tr>
+    </thead>
+    <tbody class="text-center">
+      <tr th:each="log, stat : ${mailLogs}">
+        <td th:text="${stat.count}"></td>
+        <td th:text="${#temporals.format(log.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+        <td th:text="${log.member.email}"></td>
+        <td>
+          <a th:href="@{/admin/mails-contents(mailId=${log.id})}"
+             th:text="${log.post.title}" class="text-decoration-none text-dark"></a>
+        </td>
+        <td>
+            <span class="badge px-3 py-2 cursor-pointer"
+                  th:classappend="${log.status == 'SUCCESS' ? 'bg-success' : 'bg-danger'}"
+                  th:text="${log.status == 'SUCCESS' ? '성공' : '재전송'}"
+                  th:attr="data-mail-id=${log.id}"
+                  onclick="mailToggleStatus(this)">
+            </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <th:block th:replace="~{layout/pagination :: pagination(${page}, '/admin/mails')}"></th:block>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+<script src="../js/admin/dashboard.js"></script>
+
+<th:block th:replace="layout/footer :: footer"></th:block>
+</body>
+</html>
