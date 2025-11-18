@@ -188,15 +188,15 @@ function mailToggleStatus(badge) {
 // ===============================
 async function commentToggleStatus(el) {
   const commentId = el.getAttribute('data-comment-id');
-  if (!confirm('댓글을 삭제하시겠습니까?')) return;
-
-  const res = await csrfFetch(`/admin/comments/${commentId}/delete`, { method: 'POST' });
-
+  if (!confirmed) return;
+  const res = await csrfFetch(`/admin/comments/${commentId}/status`, {
+    method: 'POST'
+  });
   if (res.ok) {
-    alert('댓글이 삭제되었습니다.');
+    alert('상태가 변경되었습니다.');
     location.reload();
   } else {
-    alert('삭제 실패');
+    alert('상태 변경 실패');
   }
 }
 
