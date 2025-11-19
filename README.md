@@ -3,6 +3,9 @@
 # 📰 NewsTwin  
 ### AI 기반 자동 경제 뉴스 분석 & 개인화 뉴스레터 플랫폼
 
+**🌐 배포 주소(Deploy URL)**  
+👉 https://newstwin.site/
+
 **경제 뉴스를 자동 수집 → AI 분석 → 개인 맞춤 이메일 뉴스레터 발송까지  
 전 과정을 자동화한 NewsTwin 서비스입니다.**
 
@@ -77,6 +80,91 @@ https://www.notion.so/oreumi/5-NT-NewsTwin-299ebaa8982b80b6b9b6e7ce37a89583
 - 게시글 내용 수정 및 운영 도구 제공
 - 관리자 전용 대시보드
 
+---
+
+# 🏗 시스템 아키텍처 (Architecture)
+<pre>
+[사용자]
+  │
+  ▼
+[Spring Boot Backend]
+  ├─ Auth / Member / Post / Comment / Subscription
+  ├─ AI Pipeline (Alan → ChatGPT → Post)
+  ├─ Scheduler (뉴스 분석 / 뉴스레터 발송)
+  └─ Email Service (Async)
+  │
+  ▼
+[PostgreSQL RDS] (RDS)
+
+[Alan AI]       ← 최신 경제 뉴스 5개  
+[ChatGPT]       ← 요약 / 긍·부정 분석 / 키워드 생성
+
+[Email Service]
+   ├─ HTML 마크업 템플릿
+   ├─ 비동기 발송 (@Async)
+   └─ MailLog DB 기록
+</pre>
+
+---
+
+# 🔁 자동 뉴스 분석 파이프라인
+
+1. **Alan AI** → 카테고리별 주요 뉴스 5개 수집  
+2. **ChatGPT** → 요약 / 긍정·부정 분석 / 핵심 키워드 생성  
+3. **키워드 누적 & 중복 뉴스 제거**  
+4. **Markdown 형태로 DB(Post) 저장**  
+5. **8개 카테고리 직렬 처리(Top5 → 금융 → 증권 → 산업 …)**
+
+---
+
+# 📬 이메일 뉴스레터 파이프라인
+
+1. 구독 카테고리 기반 뉴스 조회  
+2. Markdown → HTML 변환 (commonmark-java)  
+3. 비동기 이메일 발송 (@Async + ThreadPool)  
+4. 발송 결과 MailLog 기록
+
+---
+
+# 🧩 개발 컨벤션
+
+## 🔀 Git 브랜치 전략
+<pre>
+develop
+ ├─ feature/{기능명}
+ ├─ fix/{버그명}
+ └─ refactor/{리팩토링명}
+
+stage       ← 테스트 배포
+production  ← 실서버 배포
+</pre>
+
+## 📝 Git Commit Convention
+
+### Commit Type
+| 타입 | 설명 |
+|------|-------------|
+| feat | 새로운 기능 추가 |
+| fix | 버그 수정 |
+| refactor | 코드 리팩토링 |
+| style | 포맷/주석 등 비기능 수정 |
+| docs | 문서 수정 |
+| chore | 빌드/환경설정 작업 |
+| test | 테스트 코드 관련 변경 |
+
+### Commit Rule
+<타입>: <작업 내용 요약> (#이슈번호)
+
+### Commit Example
+feat: Alan AI 뉴스 수집 기능 추가 (#12)  
+fix: 메일 발송 실패 로그 저장 오류 수정
+
+## 💻 코드 컨벤션
+- 클래스: PascalCase  
+- 메서드/변수: lowerCamelCase  
+- 상수: UPPER_SNAKE_CASE  
+- 패키지: lowercase  
+- DB 컬럼: snake_case  
 ---
 
 # 🗂️ 디렉토리 구조
