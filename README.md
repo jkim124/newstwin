@@ -4,7 +4,7 @@
 AI가 경제 뉴스를 자동 분석해 개인 맞춤 뉴스레터로 전달하는 서비스
 
 ### 🚀 Live Service  
-🔗 https://newstwin.kro.kr/
+- 🔗 https://newstwin.kro.kr/
 
 ### 🎬 Demo & Presentation
 - 🎥 시연 영상: https://youtu.be/xxxx  
