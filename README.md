@@ -7,7 +7,7 @@ AI가 경제 뉴스를 자동 분석해 개인 맞춤 뉴스레터로 전달하�
 - 🔗 https://newstwin.kro.kr/
 
 ### 🎬 Demo & Presentation
-- 🎥 시연 영상: https://youtu.be/xxxx  
+- 🎥 시연 영상: [https://youtu.be/xxxx](https://youtu.be/_gDfWhfg37Q)  
 - 📄 API 명세서: https://newstwin.kro.kr/swagger-ui/index.html  
 - 🎨 Figma 디자인: https://www.figma.com/design/R4JglkL6i2EfOmlyQdxrH2/5%EC%A1%B0-NewsTwin?node-id=0-1&p=f
 
